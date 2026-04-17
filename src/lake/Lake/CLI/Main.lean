@@ -114,12 +114,13 @@ def LakeOptions.computeEnv (opts : LakeOptions) : EIO CliError Lake.Env := do
 public def LakeOptions.mkLoadConfig (opts : LakeOptions) : EIO CliError LoadConfig := do
   let some wsDir ← resolvePath? opts.rootDir
     | throw <| .missingRootDir opts.rootDir
+  let packageOverridesFromEnv ← ((← IO.getEnv "LAKE_PACKAGES").map (Manifest.loadEntries · |>.toEIO fun e => CliError.invalidEnv s!"failed to load LAKE_PACKAGES: {e}") |>.getD (pure #[]))
   return {
     lakeArgs? := opts.args.toArray
     lakeEnv := ← opts.computeEnv
     wsDir
     relConfigFile := opts.configFile
-    packageOverrides := opts.packageOverrides
+    packageOverrides := packageOverridesFromEnv ++ opts.packageOverrides
     lakeOpts := opts.configOpts
     leanOpts := Lean.Options.empty
     reconfigure := opts.reconfigure

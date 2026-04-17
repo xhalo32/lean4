@@ -53,6 +53,7 @@ BASIC OPTIONS:
   --rehash, -H          hash all files for traces (do not trust `.hash` files)
   --update              update dependencies on load (e.g., before a build)
   --packages=file       JSON file of package entries that override the manifest
+                        Can be set via LAKE_PACKAGES environment variable
   --reconfigure, -R     elaborate configuration files instead of using OLeans
   --keep-toolchain      do not update toolchain on workspace update
   --allow-empty         accept bare builds with no default targets configured
